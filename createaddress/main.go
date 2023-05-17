@@ -12,6 +12,7 @@ import (
 
 func main() {
 	netParams := &chaincfg.SigNetParams
+	//netParams := &chaincfg.TestNet3Params
 	privateKey, err := btcec.NewPrivateKey()
 	if err != nil {
 		log.Fatal(err)
@@ -21,6 +22,19 @@ func main() {
 
 	publicKey := hex.EncodeToString(privateKey.PubKey().SerializeCompressed())
 	log.Printf("new public key %s \n", publicKey)
+
+	legacyAddress, err := btcutil.NewAddressPubKey(privateKey.PubKey().SerializeCompressed(), netParams)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("new legacy address %s \n", legacyAddress.EncodeAddress())
+
+
+	nativeSegwitAddress, err := btcutil.NewAddressWitnessPubKeyHash(btcutil.Hash160(privateKey.PubKey().SerializeCompressed()), netParams)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("new native segwit address %s \n", nativeSegwitAddress.EncodeAddress())
 
 
 	taprootAddress, err := btcutil.NewAddressTaproot(schnorr.SerializePubKey(txscript.ComputeTaprootKeyNoScript(privateKey.PubKey())), netParams)
