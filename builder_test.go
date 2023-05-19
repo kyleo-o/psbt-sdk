@@ -23,11 +23,6 @@ func TestPsbtBuilder_CreatePsbtTransaction(t *testing.T) {
 			OutTxId:  "456ae529982ebfe0e26b90f306b49df0c5a8b40537f9c28d6962549c7cb8262a",
 			OutIndex: 0,
 		},
-		//{
-		//	//0.0009
-		//	OutTxId:  "70def774e8c57fdacf79cca04abace87b0181daa037ec2cccf82e530b0e65967",
-		//	OutIndex: 0,
-		//},
 	}
 
 	outs := []Output{
@@ -39,10 +34,6 @@ func TestPsbtBuilder_CreatePsbtTransaction(t *testing.T) {
 			Address: "tb1q2e328cfgup9w7krtfnvuu7wd6ph6a9l8cdwakd",
 			Amount:  900000,
 		},
-		//{
-		//	Address: "moPiaBwnvbowi3YMJ1UmGTjDUEyk2ckV39",
-		//	Amount:  50000,
-		//},
 	}
 
 	if err := s.CreatePsbtTransaction(ins, outs); err != nil {
@@ -67,14 +58,6 @@ func TestPsbtBuilder_CreatePsbtTransaction(t *testing.T) {
 			WitnessUtxoAmount: 1000000,
 			Index:             1,
 		},
-		//{
-		//	UtxoType:          NonWitness,
-		//	SighashType:txscript.SigHashSingle,
-		//	NonWitnessUtxo:    "020000000001011c8e7ebec562b931c4aa423636a124026176c989c26149d654adad7db832abbe0000000000feffffff0240420f00000000001600145662a3e128e04aef586b4cd9ce79cdd06fae97e77cba37c44d060000160014fea0e3baa61b4e167e4d0c5881cc5cb0c48e31e002473044022023161fd137c23c64f416336e62c749290fdfac3f4dfa3d36cf7abb3ea077d35102202469f9c0295ebd8278e2f763ae03bb2e41f40fd21db8c74a6adc6cdf576a0ad2012102525c63e14f5c4c87c69cde6800de1f4cd0367fe3b4590a5c8b3b76944ef9f45f272e0200",
-		//	WitnessUtxoPkScript:       "",
-		//	WitnessUtxoAmount: 1000000,
-		//	Index:             1,
-		//},
 	}
 
 	if err := s.UpdatePsbtTransaction(inUtxos); err != nil {
@@ -110,8 +93,30 @@ func TestPsbtBuilder_CreatePsbtTransaction(t *testing.T) {
 
 	raw, err := s.ExtractPsbtTransaction()
 	if err != nil {
-		log.Fatalf("PsbtTransactionToRawString() error = %v,", err)
+		log.Fatalf("ExtractPsbtTransaction() error = %v,", err)
 	}
 
 	fmt.Printf("Raw:%s\n", raw)
+}
+
+
+func TestPsbtBuilder_NewUpdaterFromPsbtTransaction(t *testing.T) {
+	psbtRaw := "70736274ff01005e0200000001e9f3c43d438fd5d359ccf99334824b473c2ea97d8cbcaa2c157609703959f7480100000000ffffffff01e80300000000000022512064729335d854ed8b52c83f02d7695630167de3f0bda3d511dfe881dd4d4aa4ca00000000000100fd090102000000000101d2ec50d5ef95d1f0811d3403fe84a6260472b51cc30a7e7158c794918d3cbcf20000000000feffffff03a97c1b0000000000160014abf3b63c1cb79ee3009989475d147273c013ba2a701700000000000022512064729335d854ed8b52c83f02d7695630167de3f0bda3d511dfe881dd4d4aa4cae803000000000000160014900ac7e578ced02be6d3db072328a76e9a6d3ee10247304402202c751e6be6b033e003b136968cc7c325f846412fff54494c8abe0176e0b05fc80220371419eeecf71815f6e51bb8400548facdb38ca85c13ec689e67124458bf3a910121021d7e2a3ce13a374facccc4385ecbb9b25f7b590d0ebd7bad06371e3710e575643a21250001012b701700000000000022512064729335d854ed8b52c83f02d7695630167de3f0bda3d511dfe881dd4d4aa4ca01084301418e5f4cabc6e3860c3e223abf79ba7793301a4e394d436d019c37ab44c9d1b6a3ca5b26974030926d830fb72e8121083d41a52495cc34a76e3e0a059cbdfde96a830000"
+	s := &PsbtBuilder{
+		NetParams:   &chaincfg.TestNet3Params,
+	}
+	if err := s.NewUpdaterFromPsbtTransaction(psbtRaw); err != nil {
+		log.Fatalf("NewUpdaterFromPsbtTransaction() error = %v,", err)
+	}
+	outs := []Output{
+		{
+			Address: "tb1q2e328cfgup9w7krtfnvuu7wd6ph6a9l8cdwakd",
+			Amount:  700000,
+		},
+	}
+	if err := s.UpdaterAddOutputs(outs); err != nil {
+		log.Fatalf("UpdaterAddOutputs() error = %v,", err)
+	}
+
+
 }

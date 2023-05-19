@@ -15,9 +15,7 @@ import (
 
 type PsbtBuilder struct {
 	NetParams *chaincfg.Params
-	PsbtPacket *psbt.Packet
 	PsbtUpdater *psbt.Updater
-	PsbtRawTx []byte
 }
 
 func (s *PsbtBuilder) CreatePsbtTransaction(ins []Input, outs []Output) error {
@@ -55,8 +53,7 @@ func (s *PsbtBuilder) CreatePsbtTransaction(ins []Input, outs []Output) error {
 	if err != nil {
 		return err
 	}
-	s.PsbtPacket = cPsbt
-	s.PsbtUpdater, err = psbt.NewUpdater(s.PsbtPacket)
+	s.PsbtUpdater, err = psbt.NewUpdater(cPsbt)
 	if err != nil {
 		return err
 	}
@@ -108,7 +105,6 @@ func (s *PsbtBuilder) UpdatePsbtTransaction(inUtxos []InputUtxo) error {
 
 func (s *PsbtBuilder) SignPsbtTransaction(inSigners []InputSigner) error {
 	for _, v := range inSigners {
-		//sigByte, err := hex.DecodeString(v.Sig)
 		privateKeyBytes, err := hex.DecodeString(v.Pri)
 		if err != nil {
 			return err
@@ -147,27 +143,54 @@ func (s *PsbtBuilder) SignPsbtTransaction(inSigners []InputSigner) error {
 	return nil
 }
 
-func (s *PsbtBuilder) NewUpdaterFromPsbtTransaction(rawTx string) error {
+func (s *PsbtBuilder) UpdaterAddOutputs(outs []Output) error {
+	for _, out := range outs {
+		address, err := btcutil.DecodeAddress(out.Address, s.NetParams)
+		if err != nil {
+			return err
+		}
 
+		pkScript, err := txscript.PayToAddrScript(address)
+		if err != nil {
+			return err
+		}
+
+		txOut := wire.NewTxOut(int64(out.Amount), pkScript)
+		s.PsbtUpdater.Upsbt.UnsignedTx.AddTxOut(txOut)
+	}
 	return nil
 }
 
-func (s *PsbtBuilder) IsComplete() bool {
-	return s.PsbtPacket.IsComplete()
+func (s *PsbtBuilder) NewUpdaterFromPsbtTransaction(psbtRaw string) error {
+	b, err := hex.DecodeString(psbtRaw)
+	if err != nil {
+		return err
+	}
+	p, err := psbt.NewFromRawBytes(bytes.NewReader(b), false)
+	if err != nil {
+		return err
+	}
+	s.PsbtUpdater, err = psbt.NewUpdater(p)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 
-func (s *PsbtBuilder) ExtractPsbtTransaction() (string, error) {
+func (s *PsbtBuilder) IsComplete() bool {
+	return s.PsbtUpdater.Upsbt.IsComplete()
+}
 
+func (s *PsbtBuilder) ExtractPsbtTransaction() (string, error) {
 	if !s.IsComplete() {
-		err := psbt.MaybeFinalizeAll(s.PsbtPacket)
+		err := psbt.MaybeFinalizeAll(s.PsbtUpdater.Upsbt)
 		if err != nil {
 			return "", err
 		}
 	}
 
-
-	tx, err := psbt.Extract(s.PsbtPacket)
+	tx, err := psbt.Extract(s.PsbtUpdater.Upsbt)
 	if err != nil {
 		return "", err
 	}
@@ -179,6 +202,13 @@ func (s *PsbtBuilder) ExtractPsbtTransaction() (string, error) {
 	return hex.EncodeToString(b.Bytes()), nil
 }
 
+func (s *PsbtBuilder) GetInputs() []*wire.TxIn {
+	return s.PsbtUpdater.Upsbt.UnsignedTx.TxIn
+}
+
+func (s *PsbtBuilder) GetOutputs() []*wire.TxOut{
+	return s.PsbtUpdater.Upsbt.UnsignedTx.TxOut
+}
 
 type PrevOutputFetcher struct{
 	pkScript []byte
