@@ -108,4 +108,5 @@ func TestPsbtBuilder_CreatePsbtTransaction(t *testing.T) {
 
 	fmt.Printf("PsbtRaw2:%s\n", psbtRaw2)
 	fmt.Printf("FinalRaw2:%s\n", txRaw)
+	//https://mempool.space/zh/signet/tx/71d5492dce16436cbda2ff09e4bc3d19c90c0ceae1ea037cd8b2a4f572b66dea
 }
