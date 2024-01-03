@@ -1,33 +1,30 @@
 package psbt_sdk
 
-import "github.com/btcsuite/btcd/txscript"
+import (
+	"github.com/btcsuite/btcd/txscript"
+	"github.com/btcsuite/btcd/wire"
+)
 
 type Input struct {
-	OutTxId string `json:"out_tx_id"`
+	OutTxId  string `json:"out_tx_id"`
 	OutIndex uint32 `json:"out_index"`
 }
 
-type UtxoType int
-
-const (
-	NonWitness UtxoType = 1
-	Witness    UtxoType = 2
-)
-
-type InputUtxo struct {
-	UtxoType            UtxoType             `json:"utxo_type"`
-	SighashType         txscript.SigHashType `json:"sighash_type"`
-	NonWitnessUtxo      string               `json:"non_witness_utxo"`       //
-	WitnessUtxoPkScript string               `json:"witness_utxo_pk_script"` //
-	WitnessUtxoAmount   uint64               `json:"witness_utxo_amount"`    //
-	Index               int                  `json:"index"`
+type InputSign struct {
+	UtxoType       UtxoType             `json:"utxo_type"`
+	Index          int                  `json:"index"`
+	OutRaw         string               `json:"out_raw"`
+	PkScript       string               `json:"pk_script"`
+	Amount         uint64               `json:"amount"`
+	SighashType    txscript.SigHashType `json:"sighash_type"`
+	PriHex         string               `json:"pri_hex"`
+	MultiSigScript string               `json:"multi_sig_script"`
+	PreSigScript   string               `json:"pre_sig_script"`
 }
 
-type InputSigner struct {
-	UtxoType            UtxoType `json:"utxo_type"`
-	SighashType         txscript.SigHashType `json:"sighash_type"`
-	//Sig   string `json:"sig"`
-	Pri  string `json:"pri"`
-	Pub   string `json:"pub"`
-	Index int    `json:"index"`
+type SigIn struct {
+	WitnessUtxo        *wire.TxOut          `json:"witnessUtxo"`
+	SighashType        txscript.SigHashType `json:"sighashType"`
+	FinalScriptWitness []byte               `json:"finalScriptWitness"`
+	Index              int                  `json:"index"`
 }

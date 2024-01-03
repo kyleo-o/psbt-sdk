@@ -2,5 +2,6 @@ package psbt_sdk
 
 type Output struct {
 	Address string `json:"address"`
-	Amount uint64 `json:"amount"`
+	Amount  uint64 `json:"amount"`
+	Script  string `json:"script"`
 }
