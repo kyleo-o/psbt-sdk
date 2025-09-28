@@ -1,3 +1,8 @@
 go.sum
 .idea
 test.txt
+/createwallet
+/create-doge-address
+/createxpubaddress
+/createkey
+/createaddress
