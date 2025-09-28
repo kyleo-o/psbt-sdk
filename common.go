@@ -5,6 +5,7 @@ type UtxoType int
 const (
 	NonWitness UtxoType = 1
 	Witness    UtxoType = 2
+	Taproot    UtxoType = 3
 )
 
 const (

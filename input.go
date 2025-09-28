@@ -11,15 +11,17 @@ type Input struct {
 }
 
 type InputSign struct {
-	UtxoType       UtxoType             `json:"utxo_type"`
-	Index          int                  `json:"index"`
-	OutRaw         string               `json:"out_raw"`
-	PkScript       string               `json:"pk_script"`
-	Amount         uint64               `json:"amount"`
-	SighashType    txscript.SigHashType `json:"sighash_type"`
-	PriHex         string               `json:"pri_hex"`
-	MultiSigScript string               `json:"multi_sig_script"`
-	PreSigScript   string               `json:"pre_sig_script"`
+	UtxoType            UtxoType             `json:"utxo_type"`
+	Index               int                  `json:"index"`
+	OutRaw              string               `json:"out_raw"`
+	PkScript            string               `json:"pk_script"`
+	RedeemScript        string               `json:"redeem_script"`
+	ControlBlockWitness string               `json:"control_block_witness"`
+	Amount              uint64               `json:"amount"`
+	SighashType         txscript.SigHashType `json:"sighash_type"`
+	PriHex              string               `json:"pri_hex"`
+	MultiSigScript      string               `json:"multi_sig_script"`
+	PreSigScript        string               `json:"pre_sig_script"`
 }
 
 type SigIn struct {
