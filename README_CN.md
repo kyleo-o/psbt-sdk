@@ -1,8 +1,12 @@
 # PSBT SDK
 
-English | [中文文档](README_CN.md)
+[English](README.md) | 中文文档
 
 一个功能全面的Go语言SDK，用于创建、管理和签名比特币部分签名比特币交易（PSBT）。该SDK提供了简单而强大的接口，用于构建复杂的比特币交易，支持各种UTXO类型，包括Legacy、SegWit和Taproot。
+
+## 测试用例
+
+🚧 **即将推出** - 全面的测试用例和示例即将推出。
 
 ## 安装
 

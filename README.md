@@ -4,6 +4,10 @@
 
 A comprehensive Go SDK for creating, managing, and signing Bitcoin Partially Signed Bitcoin Transactions (PSBTs). This SDK provides a simple and powerful interface for building complex Bitcoin transactions with support for various UTXO types including Legacy, SegWit, and Taproot.
 
+## Test Cases
+
+🚧 **Coming Soon** - Comprehensive test cases and examples will be available soon.
+
 ## Installation
 
 ```bash
