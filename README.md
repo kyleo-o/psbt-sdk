@@ -264,9 +264,9 @@ The SDK supports three types of UTXOs:
 ## Network Support
 
 - Bitcoin Mainnet
-- Bitcoin Testnet
+- Bitcoin Testnet3
 - Bitcoin Signet
-- Bitcoin Regression Test
+- Bitcoin RegTest
 
 ## Dependencies
 

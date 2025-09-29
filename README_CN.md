@@ -264,10 +264,10 @@ SDK支持三种UTXO类型：
 
 ## 网络支持
 
-- 比特币主网
-- 比特币测试网
-- 比特币Signet
-- 比特币回归测试
+- 比特币 Mainnet
+- 比特币 Testnet3
+- 比特币 Signet
+- 比特币 RegTest
 
 ## 依赖
 
